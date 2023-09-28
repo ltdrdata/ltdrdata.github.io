@@ -63,8 +63,9 @@
         <thead>
             <tr>
                 <th style="width: 100px; text-align: center;"></th>
-                <th>Author</th>
+                <th style="width: 100px; text-align: center;">Author</th>
                 <th>Title</th>
+                <th style="width: 100px; text-align: center;">Reference</th>
                 <th>Description</th>
             </tr>
         </thead>
@@ -94,6 +95,7 @@
                 const nodeInfoLabel = document.createElement('td');
                 const author = document.createElement('td');
                 const title = document.createElement('td');
+                const reference = document.createElement('td');
                 const desc = document.createElement('td');
 
                 let item = exts.custom_nodes[key];
@@ -101,11 +103,13 @@
                 nodeInfoLabel.textContent = "INFO";
                 author.textContent = item.author;
                 title.innerHTML = `<a href='${item.reference}' target='blank'>${item.title}</a>`;
+                reference.innerHTML = `<a href='${item.reference}' target='blank'>${item.reference}</a>`;
                 desc.innerHTML = item.description;
 
                 row.appendChild(nodeInfoLabel);
                 row.appendChild(author);
                 row.appendChild(title);
+                row.appendChild(reference);
                 row.appendChild(desc);
 
                 const nodeRowLabel = document.createElement('td');
@@ -113,7 +117,7 @@
 
                 nodeRowLabel.textContent = "NODES";
 
-                nodes.setAttribute('colspan', '3');
+                nodes.setAttribute('colspan', '4');
 
                 nodesRow.appendChild(nodeRowLabel);
                 nodesRow.appendChild(nodes);
