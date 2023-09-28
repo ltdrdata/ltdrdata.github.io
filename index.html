@@ -139,7 +139,11 @@
                         total_nodes += nodes_in_file[0][n];
                     }
                 }
-                nodes.textContent = total_nodes;
+
+                if(total_nodes == '')
+                    nodes.textContent = 'N/A';
+                else
+                    nodes.textContent = total_nodes;
             }
 
         }
