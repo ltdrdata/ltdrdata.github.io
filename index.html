@@ -63,8 +63,8 @@
     <table id="json-table">
         <thead>
             <tr>
-                <th style="width: 100px; text-align: center; border: 1px solid silver
-                "></th>
+                <th style="width: 20px; text-align: center; border: 1px solid silver">ID</th>
+                <th style="width: 100px; text-align: center; border: 1px solid silver"></th>
                 <th style="width: 100px; text-align: center; border: 1px solid silver">Author</th>
                 <th style="text-align: center; border: 1px solid silver">Title</th>
                 <th style="width: 100px; text-align: center; border: 1px solid silver">Reference</th>
@@ -94,6 +94,7 @@
                 }
                 alternateColor = !alternateColor;
 
+                const node_id = document.createElement('td');
                 const nodeInfoLabel = document.createElement('td');
                 const author = document.createElement('td');
                 const title = document.createElement('td');
@@ -102,12 +103,17 @@
 
                 let item = exts.custom_nodes[key];
 
-                nodeInfoLabel.textContent = "INFO";
+                node_id.setAttribute('rowspan', '2');
+
+                node_id.textContent = parseInt(key)+1;
+                node_id.style.textAlign = 'center';
+                nodeInfoLabel.innerHTML = "<B>INFO</B>";
                 author.textContent = item.author;
                 title.innerHTML = `<a href='${item.reference}' target='blank'>${item.title}</a>`;
                 reference.innerHTML = `<a href='${item.reference}' target='blank'>${item.reference}</a>`;
                 desc.innerHTML = item.description;
 
+                row.appendChild(node_id);
                 row.appendChild(nodeInfoLabel);
                 row.appendChild(author);
                 row.appendChild(title);
