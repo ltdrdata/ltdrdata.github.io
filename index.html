@@ -1,162 +1,317 @@
 <!DOCTYPE html>
 <html>
-<title>ComfyUI Nodes Info</title>
 <head>
+    <title>ComfyUI Nodes Info</title>
     <style>
+        :root {
+            --background-color: #f7f7f7;
+            --text-color: #000;
+            --link-color: #404068;
+            --link-hover-color: #5c5c89;
+            --table-background-color: #fff;
+            --table-header-color: #c2d2f2;
+            --table-alt-row: #d7d7d7;
+            --table-hover-color: #c5c5f5;
+            --table-border-color: #ddd;
+            --table-border-alt-color: silver;
+        }
+        
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            background-color: var(--background-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
         }
-    
+
+        a,
+        a:link,
+        a:active,
+        a:visited {
+            color: var(--link-color);
+        }
+
+        a:hover {
+            color: var(--link-hover-color);
+        }
+
+        #nav {
+            margin: 0 auto;
+            padding-left: 3vw;
+            padding-right: 3vw;
+        }
+
+        #nav .tools {
+            float:right;
+        }
+
+        #container {
+            padding-left: 2.5vw;
+            padding-right: 2.5vw;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
             margin: 20px auto;
-            border: 1px solid #ddd;
-            background-color: white;
+            border: 1px solid var(--table-border-color);
+            border-radius: 5px;
+            background-color: var(--table-background-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-    
+
         th, td {
             text-align: left;
+            color: var(--text-color);
             padding: 12px;
-            border-bottom: 1px solid #ddd;
-            border: 1px solid silver;
+            border-bottom: 1px solid var(--table-border-color);
+            border: 1px solid var(--table-border-alt-color);
+            cursor: pointer;
         }
-    
+
         th {
-            background-color: #c2d2f2;
+            background-color: var(--table-header-color);
         }
-    
+
         td:first-child {
             font-weight: bold;
         }
-    
+
         td:last-child {
             font-style: italic;
         }
-    
+
         tr:hover {
-            background-color: #c5c5f5;
+            background-color: var(--table-hover-color);
         }
-    
+
         .alternate-row {
-            background-color: #d7d7d7;
+            background-color: var(--table-alt-row);
         }
     </style>
-    
 </head>
 <body>
-    <BR>
-    <BR>
+    <br />
+    <br />
     <center><B><font size='20px'>ComfyUI Nodes Info</font></B></center>
-    <BR>
-    &nbsp;&nbsp;&nbsp;<B>GitHub Repositories:</B>&nbsp;&nbsp;[<a href="https://github.com/comfyanonymous/ComfyUI" target="blank"/>ComfyUI</a>]
-    &nbsp;
-    [<a href="https://github.com/ltdrdata/ComfyUI-Manager" target="blank"/>ComfyUI-Manager</a>]
-    &nbsp;
-    [<a href="https://github.com/ltdrdata/ltdrdata.github.io" target="blank"/>ltdrdata.github.io</a>]
-    <BR>
-    <BR>
-    <table id="json-table">
-        <thead>
-            <tr>
-                <th style="width: 20px; text-align: center; border: 1px solid silver">ID</th>
-                <th style="width: 100px; text-align: center; border: 1px solid silver"></th>
-                <th style="width: 100px; text-align: center; border: 1px solid silver">Author</th>
-                <th style="text-align: center; border: 1px solid silver">Title</th>
-                <th style="width: 100px; text-align: center; border: 1px solid silver">Reference</th>
-                <th style="text-align: center; border: 1px solid silver">Description</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <br />
+    <div id="nav">
+        &nbsp;&nbsp;&nbsp;<B>GitHub Repositories:</B>&nbsp;&nbsp;[<a href="https://github.com/comfyanonymous/ComfyUI" target="blank"/>ComfyUI</a>]
+        &nbsp;
+        [<a href="https://github.com/ltdrdata/ComfyUI-Manager" target="blank"/>ComfyUI-Manager</a>]
+        &nbsp;
+        [<a href="https://github.com/ltdrdata/ltdrdata.github.io" target="blank"/>ltdrdata.github.io</a>]
+        <div class="tools"><a id="toggleTheme" href="#">Toggle Theme</a></div>
+    </div>
+    <br />
+    <br />
+    <div id="container">
+        <table id="json-table">
+            <thead>
+                <tr>
+                    <th style="width: 20px; text-align: center; border: 1px solid silver">ID</th>
+                    <th style="width: 100px; text-align: center; border: 1px solid silver"></th>
+                    <th style="width: 100px; text-align: center; border: 1px solid silver">Author</th>
+                    <th style="text-align: center; border: 1px solid silver">Title</th>
+                    <th style="width: 100px; text-align: center; border: 1px solid silver">Reference</th>
+                    <th style="text-align: center; border: 1px solid silver">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
     <script>
-        async function load() {
-            let ext_list = await fetch('https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/custom-node-list.json');
-            let exts = await ext_list.json();
-            let node_map = await (await fetch('https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json')).json();
+        const themeToggle = document.getElementById("toggleTheme")
 
-            const tableBody = document.querySelector('#json-table tbody');
+        const lightThemeColors = {
+            '--background-color': '#f7f7f7',
+            '--text-color': '#000',
+            '--link-color': '#34347c',
+            '--link-hover-color': '#5c5c89',
+            '--table-background-color': '#fff',
+            '--table-header-color': '#c2d2f2',
+            '--table-alt-row': '#d7d7d7',
+            '--table-hover-color': '#c5c5f5',
+            '--table-border-color': '#ddd',
+            '--table-border-alt-color': 'silver'
+        };
 
-            let alternateColor = false;
+        const darkThemeColors = {
+            '--background-color': '#333',
+            '--text-color': '#fff',
+            '--link-color': '#c7c7ed',
+            '--link-hover-color': '#e3e3fc',
+            '--table-background-color': '#121212',
+            '--table-header-color': '#454545',
+            '--table-alt-row': '#252525',
+            '--table-hover-color': '#616177',
+            '--table-border-color': '#5c5c5c',
+            '--table-border-alt-color': '#555'
+        };
 
-            for (const key in exts.custom_nodes) {
-                const row = document.createElement('tr');
-                const nodesRow = document.createElement('tr');
-                if (alternateColor) {
-                    row.classList.add('alternate-row');
-                    nodesRow.classList.add('alternate-row');
+        document.addEventListener('DOMContentLoaded', async function() {
+            let sortBy = 'ID';
+            let sortAscending = true;
+            let originalOrder = [];
+
+            async function load() {
+                let ext_list = await fetch('https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/custom-node-list.json');
+                let exts = await ext_list.json();
+                let node_map = await (await fetch('https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json')).json();
+
+                const tableBody = document.querySelector('#json-table tbody');
+
+                let alternateColor = false;
+				
+				exts.custom_nodes.forEach((node, index) => {
+					node.id = index + 1;
+				});
+
+                function updateTable(items) {
+                    tableBody.innerHTML = '';
+
+                    items.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        const nodesRow = document.createElement('tr');
+                        if (alternateColor) {
+                            row.classList.add('alternate-row');
+                            nodesRow.classList.add('alternate-row');
+                        }
+                        alternateColor = !alternateColor;
+
+                        const node_id = document.createElement('td');
+                        const nodeInfoLabel = document.createElement('td');
+                        const author = document.createElement('td');
+                        const title = document.createElement('td');
+                        const reference = document.createElement('td');
+                        const desc = document.createElement('td');
+
+                        node_id.setAttribute('rowspan', '2');
+
+                        node_id.textContent = item.id;
+                        node_id.style.textAlign = 'center';
+                        nodeInfoLabel.innerHTML = "<B>INFO</B>";
+                        author.textContent = item.author;
+                        title.innerHTML = `<a href='${item.reference}' target='blank'>${item.title}</a>`;
+                        reference.innerHTML = `<a href='${item.reference}' target='blank'>${item.reference}</a>`;
+                        desc.innerHTML = item.description;
+
+                        row.appendChild(node_id);
+                        row.appendChild(nodeInfoLabel);
+                        row.appendChild(author);
+                        row.appendChild(title);
+                        row.appendChild(reference);
+                        row.appendChild(desc);
+
+                        const nodeRowLabel = document.createElement('td');
+                        const nodes = document.createElement('td');
+
+                        nodeRowLabel.textContent = "NODES";
+
+                        nodes.setAttribute('colspan', '4');
+
+                        nodesRow.appendChild(nodeRowLabel);
+                        nodesRow.appendChild(nodes);
+
+                        tableBody.appendChild(row);
+                        tableBody.appendChild(nodesRow);
+
+                        var total_nodes = "";
+                        for (let k in item.files) {
+                            let file = item.files[k];
+                            let nodes_in_file = node_map[file];
+
+                            if (!nodes_in_file)
+                                continue;
+
+                            for (let n in nodes_in_file[0]) {
+                                if (total_nodes != "")
+                                    total_nodes += ", ";
+                                total_nodes += nodes_in_file[0][n];
+                            }
+                        }
+
+                        if (total_nodes == '')
+                            nodes.textContent = 'N/A';
+                        else
+                            nodes.textContent = total_nodes;
+                    });
                 }
-                alternateColor = !alternateColor;
 
-                const node_id = document.createElement('td');
-                const nodeInfoLabel = document.createElement('td');
-                const author = document.createElement('td');
-                const title = document.createElement('td');
-                const reference = document.createElement('td');
-                const desc = document.createElement('td');
-
-                let item = exts.custom_nodes[key];
-
-                node_id.setAttribute('rowspan', '2');
-
-                node_id.textContent = parseInt(key)+1;
-                node_id.style.textAlign = 'center';
-                nodeInfoLabel.innerHTML = "<B>INFO</B>";
-                author.textContent = item.author;
-                title.innerHTML = `<a href='${item.reference}' target='blank'>${item.title}</a>`;
-                reference.innerHTML = `<a href='${item.reference}' target='blank'>${item.reference}</a>`;
-                desc.innerHTML = item.description;
-
-                row.appendChild(node_id);
-                row.appendChild(nodeInfoLabel);
-                row.appendChild(author);
-                row.appendChild(title);
-                row.appendChild(reference);
-                row.appendChild(desc);
-
-                const nodeRowLabel = document.createElement('td');
-                const nodes = document.createElement('td');
-
-                nodeRowLabel.textContent = "NODES";
-
-                nodes.setAttribute('colspan', '4');
-
-                nodesRow.appendChild(nodeRowLabel);
-                nodesRow.appendChild(nodes);
-
-                tableBody.appendChild(row);
-                tableBody.appendChild(nodesRow);
-
-                var total_nodes = "";
-                for(let k in item.files) {
-                    let file = item.files[k];
-                    let nodes_in_file = node_map[file];
-
-                    if(!nodes_in_file)
-                        continue;
-
-                    for(let n in nodes_in_file[0]) {
-                        if(total_nodes != "")
-                            total_nodes += ", ";
-                        total_nodes += nodes_in_file[0][n];
+                function handleHeaderClick(category) {
+                    if (sortBy === category) {
+                        sortAscending = !sortAscending;
+                    } else {
+                        sortBy = category;
+                        sortAscending = true;
                     }
+
+                    let sortedItems = [...originalOrder]; // Create a copy to preserve the original order
+
+                    sortedItems.sort((a, b) => {
+                        if (sortBy === 'Title') {
+                            return a.title.localeCompare(b.title);
+                        } else if (sortBy === 'Description') {
+                            return a.description.localeCompare(b.description);
+                        } else if (sortBy === 'Author') {
+                            return a.author.localeCompare(b.author);
+                        } else if (sortBy === 'Reference') {
+                            return a.reference.localeCompare(b.reference);
+                        } else if (sortBy === 'ID') {
+                            return a.id - b.id;
+                        }
+                    });
+
+                    if (!sortAscending) {
+                        sortedItems.reverse();
+                    }
+
+                    updateTable(sortedItems);
                 }
 
-                if(total_nodes == '')
-                    nodes.textContent = 'N/A';
-                else
-                    nodes.textContent = total_nodes;
+                const headers = document.querySelectorAll('#json-table th');
+                headers.forEach(header => {
+                    header.addEventListener('click', () => {
+                        const category = header.textContent.trim();
+                        handleHeaderClick(category);
+                    });
+                });
+
+                originalOrder = exts.custom_nodes.slice();
+                updateTable(originalOrder);
             }
 
-        }
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                const root = document.documentElement;
+                for (const [property, value] of Object.entries(darkThemeColors)) {
+                    root.style.setProperty(property, value);
+                }
+            }
 
-        load();
+            load();
+
+        });
+
+        themeToggle.addEventListener("click", function(){
+            const root = document.documentElement;
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme === 'dark' || currentTheme === null) {
+                for (const [property, value] of Object.entries(lightThemeColors)) {
+                    root.style.setProperty(property, value);
+                }
+                localStorage.setItem('theme', 'light');
+            } else {
+                for (const [property, value] of Object.entries(darkThemeColors)) {
+                    root.style.setProperty(property, value);
+                }
+                localStorage.setItem('theme', 'dark');
+            }
+        });
     </script>
 </body>
 </html>
