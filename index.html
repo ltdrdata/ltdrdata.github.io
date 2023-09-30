@@ -165,6 +165,10 @@
                 const tableBody = document.querySelector('#json-table tbody');
 
                 let alternateColor = false;
+				
+				exts.custom_nodes.forEach((node, index) => {
+					node.id = index + 1;
+				});
 
                 function updateTable(items) {
                     tableBody.innerHTML = '';
@@ -187,7 +191,7 @@
 
                         node_id.setAttribute('rowspan', '2');
 
-                        node_id.textContent = index + 1;
+                        node_id.textContent = item.id;
                         node_id.style.textAlign = 'center';
                         nodeInfoLabel.innerHTML = "<B>INFO</B>";
                         author.textContent = item.author;
