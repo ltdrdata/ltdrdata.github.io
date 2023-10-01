@@ -43,12 +43,12 @@
 
         .tools {
             float:right;
-			padding-right: 3vw;
+	    padding-right: 3vw;
         }
 		
-		#search-bar {
-			float: right;
-		}
+	#search-bar {
+	    float: right;
+	}
 
         #container {
             padding-left: 2.5vw;
@@ -95,14 +95,14 @@
             background-color: var(--table-alt-row);
         }
 		
-		/* Mobile Fixes */
+	/* Mobile Fixes */
 		
-		@media screen and (max-width: 1024px) {
-			#container {
-				padding-left: 0;
-				padding-right: 0;
-			}
-		}
+	@media screen and (max-width: 1024px) {
+	    #container {
+	        padding-left: 0;
+	        padding-right: 0;
+	    }
+	}
     </style>
 </head>
 <body>
@@ -320,19 +320,39 @@
 					const searchTerm = searchInput.value.toLowerCase();
 					const selectedCategory = searchType.value;
 
+					console.log("Inside search function")
+
 					const filteredItems = originalOrder.filter(item => {
-						if (selectedCategory === "All") {
-							return (
-								item.id.toString().includes(searchTerm) ||
-								item.author.toLowerCase().includes(searchTerm) ||
-								item.title.toLowerCase().includes(searchTerm) ||
-								item.description.toLowerCase().includes(searchTerm) ||
-								item.reference.toLowerCase().includes(searchTerm) ||
-								JSON.stringify(item.files).toLowerCase().includes(searchTerm)
-							);
-						} else {
-							return item[selectedCategory.toLowerCase()].toLowerCase().includes(searchTerm);
+						console.log("Inside filtered items")
+
+						// Generate node content here cause it was not accessible
+						let total_nodes = "";
+						for (let k in item.files) {
+							let file = item.files[k];
+							let nodes_in_file = node_map[file];
+
+							if (!nodes_in_file)
+								continue;
+
+							for (let n in nodes_in_file[0]) {
+								if (total_nodes != "")
+									total_nodes += ", ";
+								total_nodes += nodes_in_file[0][n];
+							}
 						}
+
+						console.log(total_nodes)
+
+						const nodesContent = total_nodes.toLowerCase();
+
+						return (
+							item.id.toString().includes(searchTerm) ||
+							item.author.toLowerCase().includes(searchTerm) ||
+							item.title.toLowerCase().includes(searchTerm) ||
+							item.description.toLowerCase().includes(searchTerm) ||
+							item.reference.toLowerCase().includes(searchTerm) ||
+							nodesContent.includes(searchTerm)
+						);
 					});
 
 					updateTable(filteredItems);
