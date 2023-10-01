@@ -315,15 +315,12 @@
 				
 				const searchInput = document.getElementById("searchInput");
 				const searchType = document.getElementById("searchType");
-
+				
 				searchInput.addEventListener("input", function() {
 					const searchTerm = searchInput.value.toLowerCase();
 					const selectedCategory = searchType.value;
 
-					console.log("Inside search function")
-
 					const filteredItems = originalOrder.filter(item => {
-						console.log("Inside filtered items")
 
 						// Generate node content here cause it was not accessible
 						let total_nodes = "";
@@ -341,8 +338,6 @@
 							}
 						}
 
-						console.log(total_nodes)
-
 						const nodesContent = total_nodes.toLowerCase();
 
 						return (
@@ -353,6 +348,10 @@
 							item.reference.toLowerCase().includes(searchTerm) ||
 							nodesContent.includes(searchTerm)
 						);
+					});
+
+					filteredItems.sort((a, b) => {
+						return a.title.localeCompare(b.title); // This should be sorting titles but if searching say "Power" it is not first
 					});
 
 					updateTable(filteredItems);
