@@ -239,7 +239,7 @@
 						const nodeRowLabel = document.createElement('td');
 						const nodes = document.createElement('td');
 
-						nodeRowLabel.textContent = "NODES";
+						nodeRowLabel.innerHTML = "<B>NODES</B>";
 
 						nodes.setAttribute('colspan', '4');
 
@@ -312,10 +312,10 @@
 
 				originalOrder = exts.custom_nodes.slice();
 				updateTable(originalOrder);
-				
+
 				const searchInput = document.getElementById("searchInput");
 				const searchType = document.getElementById("searchType");
-				
+
 				searchInput.addEventListener("input", function() {
 					const searchTerm = searchInput.value.toLowerCase();
 					const selectedCategory = searchType.value;
@@ -357,6 +357,14 @@
 					updateTable(filteredItems);
 				});
 
+				const urlParams = new URLSearchParams(window.location.search);
+				if (urlParams.has("type")) {
+					searchType.value = urlParams.get("type");
+				}
+				if (urlParams.has("keyword")) {
+					searchInput.value = urlParams.get("keyword");
+					searchInput.dispatchEvent(new Event("input"));
+				}
 			}
 
 			const currentTheme = localStorage.getItem('theme');
