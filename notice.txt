@@ -1,0 +1,7 @@
+Issue News:
+* Collision between <B>SVD</B> and <B>FreeU Advanced</B> custom node.
+* Update the Manager to the latest version if there are errors in the Impact Pack. (If you see this message, it means you are already updated.)
+
+Feature News:
+* The SVD model has been registered in the manager model list.
+* To use the SVD-related features, please update ComfyUI to the latest version.
