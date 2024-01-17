@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ComfyUI Component Copy Demopage</title>
+</head>
+<body>
+
+<button class="copy">Copy ComfyUI Component</button>
+
+<script>
+
+document.querySelector(".copy").addEventListener("click", async function(){
+    let res = await fetch('https://github.com/ltdrdata/ComfyUI-Manager/raw/main/misc/Impact.pack');
+    let components = await res.json();
+    let body = 
+        {
+            "kind": "ComfyUI Componentns",
+            "timestamp": Date.now(),
+            "components": components
+        };
+
+    var tempElem = document.createElement('textarea');
+    tempElem.value = JSON.stringify(body);
+    document.body.appendChild(tempElem);
+
+    tempElem.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempElem);
+
+    alert('The component has been copied to the clipboard.\nWhen pasted into ComfyUI, the component will be added.');
+});
+
+</script>
+
+</body>
+</html>
