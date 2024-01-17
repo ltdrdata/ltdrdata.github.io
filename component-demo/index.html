@@ -7,16 +7,28 @@
 </head>
 <body>
 
-<button class="copy">Copy ComfyUI Component</button>
+
+This is a demo page showcasing the functionality of adding ComfyUI Components to ComfyUI through the "Copy & Paste" feature.<BR>
+Press the button below to copy the components, then paste (Ctrl-V) them in ComfyUI.<BR><BR>
+
+
+<button class="copy">Copy ComfyUI Component</button><BR><BR>
+
+Components Source: <a href='https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/misc/Impact.pack'>https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/misc/Impact.pack</a><BR>
+<BR>
+
+Copied content:<BR>
+<BR>
+<textarea class="clipboard" style="width: 1024px; height: 1024px"></textarea>
 
 <script>
 
 document.querySelector(".copy").addEventListener("click", async function(){
-    let res = await fetch('https://github.com/ltdrdata/ComfyUI-Manager/raw/main/misc/Impact.pack');
+    let res = await fetch('https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/misc/Impact.pack');
     let components = await res.json();
     let body = 
         {
-            "kind": "ComfyUI Componentns",
+            "kind": "ComfyUI Components",
             "timestamp": Date.now(),
             "components": components
         };
@@ -28,6 +40,8 @@ document.querySelector(".copy").addEventListener("click", async function(){
     tempElem.select();
     document.execCommand("copy");
     document.body.removeChild(tempElem);
+
+    document.querySelector(".clipboard").textContent = tempElem.value;
 
     alert('The component has been copied to the clipboard.\nWhen pasted into ComfyUI, the component will be added.');
 });
